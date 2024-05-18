@@ -13,6 +13,8 @@ public class ScoreCounter : MonoBehaviour
 
     private readonly string _recordKey = "Record";
 
+    public int Score { get { return _score; } }
+
     private void Awake()
     {
         if (!PlayerPrefs.HasKey(_recordKey))

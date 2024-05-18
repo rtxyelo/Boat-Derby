@@ -12,7 +12,11 @@ public class ObtacleSpawner : MonoBehaviour
 
     private bool SpawnAllow = true;
 
-    private readonly float _spawnTime = 1.0f;
+    private float _spawnTime = 2.0f;
+
+    private float _error = 0.17f;
+
+    public float SpawnTime { get { return _spawnTime; } set { _spawnTime = value; } }
 
     private GameController _gameController;
 
@@ -31,11 +35,13 @@ public class ObtacleSpawner : MonoBehaviour
     {
         while (SpawnAllow)
         {
+            float spawnTime = Random.Range(_spawnTime - _error, _spawnTime);
+
             int spawnIndex = Random.Range(0, _spawnPositions.Count);
             int obtacleIndex = Random.Range(0, _obtaclePrefabs.Count);
 
             Instantiate(_obtaclePrefabs[obtacleIndex], _spawnPositions[spawnIndex].transform.position, Quaternion.identity, transform);
-            yield return new WaitForSeconds(_spawnTime);
+            yield return new WaitForSeconds(spawnTime);
         }
     }
 

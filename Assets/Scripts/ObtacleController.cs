@@ -10,7 +10,7 @@ public class ObtacleController : MonoBehaviour
     [SerializeField]
     private Collider2D _collider;
 
-    private float _duration = 3.0f;
+    private float _duration = 4.0f;
 
     private void Start()
     {

@@ -10,7 +10,7 @@ public class SceneController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    public void LoadSceneByName(string sceneName)
+    public static void LoadSceneByName(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
     }

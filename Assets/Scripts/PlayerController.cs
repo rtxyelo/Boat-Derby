@@ -13,14 +13,19 @@ public class PlayerController : MonoBehaviour
 
     private MoveDirection _moveDirection = MoveDirection.None;
 
-    [SerializeField] private float _speed = 100f;
+    [SerializeField] private float _speed = 1f;
 
-    [SerializeField]
     private ScoreCounter _scoreCounter;
 
     private AudioController _audioController;
 
+    private EventTrigger _eventTriggerLeft;
+
+    private EventTrigger _eventTriggerRight;
+
     private bool _isCanMove = true;
+
+    public float Speed { get { return _speed; } set { _speed = value; } }
 
     [HideInInspector]
     public UnityEvent<GameObject> IsBallHit;
@@ -39,9 +44,34 @@ public class PlayerController : MonoBehaviour
         }
 
         _audioController = FindObjectOfType<AudioController>();
+
+        _scoreCounter = FindObjectOfType<ScoreCounter>();
+
+        _eventTriggerLeft = GameObject.FindGameObjectWithTag("TriggerLeft").GetComponent<EventTrigger>();
+
+        _eventTriggerRight = GameObject.FindGameObjectWithTag("TriggerRight").GetComponent<EventTrigger>();
     }
 
-    private void FixedUpdate()
+    private void Start()
+    {
+        EventTrigger.Entry moveLeft = new EventTrigger.Entry();
+        moveLeft.eventID = EventTriggerType.PointerDown;
+        moveLeft.callback.AddListener((data) => { ChangeMoveSide(0); });
+        _eventTriggerLeft.triggers.Add(moveLeft);
+
+        EventTrigger.Entry moveRight = new EventTrigger.Entry();
+        moveRight.eventID = EventTriggerType.PointerDown;
+        moveRight.callback.AddListener((data) => { ChangeMoveSide(2); });
+        _eventTriggerRight.triggers.Add(moveRight);
+
+        EventTrigger.Entry moveStop = new EventTrigger.Entry();
+        moveStop.eventID = EventTriggerType.PointerUp;
+        moveStop.callback.AddListener((data) => { ChangeMoveSide(4); });
+        _eventTriggerLeft.triggers.Add(moveStop);
+        _eventTriggerRight.triggers.Add(moveStop);
+    }
+
+    private void Update()
     {
         if (_moveDirection != MoveDirection.None && _isCanMove)
         {
@@ -63,7 +93,7 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer(int moveDir)
     {
-        _rb.velocity = new Vector2(moveDir * Time.deltaTime * _speed, 0f);
+        _rb.velocity = new Vector2(moveDir * _speed, 0f);
     }
 
     public void ChangeMoveSide(int moveDirection)
